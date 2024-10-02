@@ -79,7 +79,7 @@ app.get("/listings/new",(req,res)=>{
 // Show Route
 app.get ("/listings/:id",wrapAsync(async(req,res)=>{
     let {id}=req.params;
-   const  listing = await Listing.findById(id);
+   const  listing = await Listing.findById(id).populate("reviews");
     res.render("./listings/show.ejs",{listing});
 }))
 
@@ -128,8 +128,7 @@ let newReview= new Review(req.body.review);
 listing.reviews.push(newReview);
 await newReview.save();
 await listing.save();
-console.log("new reviews saved");
-res.send("new reviews saved");
+
 
 res.redirect(`/listings/${listing._id}`);
 
