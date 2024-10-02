@@ -2,13 +2,14 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
+const Review = require("./models/review.js");
 const path=require("path");
 const methodoverride=require("method-override");
 //const { redirect } = require("statuses");
 const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utils/wrapAsync.js");
 const ExpressError=require("./utils/ExpressError.js");
-const {listingSchema}=require("./schema.js");
+const {listingSchema, reviewSchema}=require("./schema.js");
 app.use(methodoverride("_method"));
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"/views"));
@@ -51,7 +52,16 @@ const validateListing=(req,res,next)=>{
   }
 }
 
+const validateReview=(req,res,next)=>{
+  let {error}=reviewSchema.validate(req.body);
 
+  if(error){
+    let errMsg=error.details.map((el)=>el.message).join(",");
+    throw new ExpressError(404,errMsg);
+  }else{
+    next();
+  }
+}
  // Index Route
 
  app.get("/listings",wrapAsync(async(req,res)=>{
@@ -110,6 +120,20 @@ app.delete("/listings/:id",wrapAsync( async(req,res)=>{
     res.redirect("/listings");
 }))
 
+//Reviews
+//Post Route
+app.post("/listings/:id/reviews",validateReview,wrapAsync(async(req,res)=>{
+let listing = await Listing.findById(req.params.id);
+let newReview= new Review(req.body.review);
+listing.reviews.push(newReview);
+await newReview.save();
+await listing.save();
+console.log("new reviews saved");
+res.send("new reviews saved");
+
+res.redirect(`/listings/${listing._id}`);
+
+}));
 
 // app.get("/testListing",async (req, res) => {
 //   let sampleListing = new Listing({
