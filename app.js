@@ -10,7 +10,7 @@ const ejsMate=require("ejs-mate");
 const ExpressError=require("./utils/ExpressError.js");
 
 const listings= require("./routes/listing.js");
-
+const flash =require("connect-flash");
 const reviews=require("./routes/review.js");
 app.use(methodoverride("_method"));
 app.set("view engine","ejs");
@@ -50,10 +50,17 @@ const sessionOptions ={
     httpOnly : true
   },
 }
-app.use(session(sessionOptions));
-
 app.get("/",(req,res)=>{
-    res.send("i m root");
+  res.send("i m root");
+})
+
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req,res,next)=>{
+  res.locals.success= req.flash("success");
+  next();
 })
 
 
