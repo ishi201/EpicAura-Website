@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-
+const session=require("express-session");
 const path=require("path");
 const methodoverride=require("method-override");
 //const { redirect } = require("statuses");
@@ -39,6 +39,14 @@ async function main() {
 // app.get("/health",(req,res)=>{
 //     res.send("API health is ok !!");
 // })
+
+const sessionOptions ={
+  secret:"mysupersecretcode",
+  resave : false,
+  saveUninitialized:true
+}
+app.use(session(sessionOptions));
+
 app.get("/",(req,res)=>{
     res.send("i m root");
 })
