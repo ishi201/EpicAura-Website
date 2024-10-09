@@ -3,7 +3,7 @@ const router= express.Router();
 const ExpressError=require("../utils/ExpressError.js");
 const wrapAsync=require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
-
+const {isLoggedIn}=require("../middleware.js");
 const {listingSchema}=require("../schema.js");
 
 
@@ -25,7 +25,9 @@ const validateListing=(req,res,next)=>{
      }));
  
  //New route
- router.get("/new",(req,res)=>{
+ router.get("/new",isLoggedIn,(req,res)=>{
+    
+
      res.render("./listings/new.ejs");
   });
   
@@ -45,7 +47,7 @@ const validateListing=(req,res,next)=>{
  
 //Create Route
 
-router.post("/",validateListing,wrapAsync (async(req,res,next)=>{
+router.post("/",validateListing,isLoggedIn,wrapAsync (async(req,res,next)=>{
     
     const newListing = new Listing (req.body.listing)  //instance create kr rhe h
     await newListing.save();
@@ -59,7 +61,7 @@ router.post("/",validateListing,wrapAsync (async(req,res,next)=>{
 }))
 
 //Edit Route
-router.get("/:id/edit",wrapAsync(async(req,res)=>{
+router.get("/:id/edit",isLoggedIn,wrapAsync(async(req,res)=>{
 let {id}=req.params;
 const  listing = await Listing.findById(id);
 if(!listing){
@@ -70,7 +72,7 @@ if(!listing){
 }))
 
 //Update Route
-router.put("/:id",validateListing,wrapAsync(async(req,res)=>{
+router.put("/:id",validateListing,isLoggedIn,wrapAsync(async(req,res)=>{
 
     let {id}=req.params;
     await Listing.findByIdAndUpdate(id,{...req.body.listing});//js ki obj hai jiske ander sare parameters h recontruct krk unn parameter ko individual value me convert krenge jisko hum nayi updated value me pass krenge
@@ -79,7 +81,7 @@ router.put("/:id",validateListing,wrapAsync(async(req,res)=>{
 }))
 
 //DELETE ROUTE
-router.delete("/:id",wrapAsync( async(req,res)=>{
+router.delete("/:id",isLoggedIn,wrapAsync( async(req,res)=>{
     let {id}=req.params;
     let deletedListing=await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
