@@ -6,35 +6,53 @@ const {isLoggedIn , isOwner , validateListing}=require("../middleware.js");
 const listingController = require("../controllers/listings.js");
 
 
- // Index Route
+//index and create route added
+router.route("/")
+.get(wrapAsync(listingController.index) )
+.post(validateListing,isLoggedIn,wrapAsync (listingController.createListing))
 
- router.get("/",wrapAsync(listingController.index)
-    );
- 
  //New route
  router.get("/new",isLoggedIn,listingController.renderNewForm);
   
- 
- 
- // Show Route
- router.get ("/:id",wrapAsync(listingController.showListing)
-);
 
- 
-//Create Route
+//show,update,delete route added
+router.route("/:id")
+.get (wrapAsync(listingController.showListing))
+.put(isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updateListing))
+.delete(isLoggedIn,isOwner,wrapAsync(listingController.deleteListing))
 
-router.post("/",validateListing,isLoggedIn,wrapAsync (listingController.createListing)
-)
+
 
 //Edit Route
 router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(listingController.editListing))
 
-//Update Route
-router.put("/:id",isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updateListing)
-)
-
-//DELETE ROUTE
-router.delete("/:id",isLoggedIn,isOwner,wrapAsync(listingController.deleteListing)
-)
 
 module.exports=router;
+
+
+//before use router.route---------------------------------------------------------------------------
+
+//  // Index Route
+// router.get("/",wrapAsync(listingController.index) );
+ 
+
+ 
+ 
+//  // Show Route
+//  router.get ("/:id",wrapAsync(listingController.showListing)
+// );
+
+ 
+// //Create Route
+
+// router.post("/",validateListing,isLoggedIn,wrapAsync (listingController.createListing)
+// );
+
+// //Update Route
+// router.put("/:id",isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updateListing)
+// )
+
+// //DELETE ROUTE
+// router.delete("/:id",isLoggedIn,isOwner,wrapAsync(listingController.deleteListing)
+// )
+
