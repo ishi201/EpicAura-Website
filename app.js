@@ -3,7 +3,7 @@ if(process.env.NODE_ENV != "production"){
 }
 
 
-console.log(process.env.secret)
+
 
 const express = require("express");
 const app = express();
