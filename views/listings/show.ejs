@@ -74,10 +74,9 @@
     <button class="btn btn-outline-dark mb-3">Submit</button>
   </form>
   <% } %>
-  <hr>
-
- <p><b>All Reviews</b></p> 
+<% if(listing.reviews.length > 0){ %>
  <div class="row">
+  <p><b>All Reviews</b></p> 
   <% for(review of listing.reviews){ %>
     <div class="card col-5 ms-3 mb-3">
     <div class="card-body">
@@ -85,15 +84,29 @@
       <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
       <p class="card-text"><%=review.comment %></p>
     </div>
-    
-
     <form class="mb-3" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-      <br>
       <button class="btn btn-sm btn-dark">Delete</button>
     </form>
     </div>
+ </div>
      <% }%>
     </div>
+ <% } %>
 </div>
-   
+<div class="col-8 offset-3 mb-3">
+  <h4><b>Where you'll be</b></h4>
+  <div id="map"></div>
+  </div>
 </div>
+
+
+<script>
+  let mapToken= "<%= process.env.MAP_TOKEN %>";
+  console.log(mapToken);
+	mapboxgl.accessToken = mapToken;
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        center: [77.2088,28.6139], // starting position [lng, lat]. Note that lat must be set between -90 and 90
+        zoom: 9 // starting zoom
+    });
+</script>
