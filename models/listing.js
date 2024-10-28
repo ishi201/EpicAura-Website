@@ -18,7 +18,7 @@ const listingSchema = new Schema({
   country: String,
   reviews:[{
     type:Schema.Types.ObjectId,
-    ref:"Review"
+    ref:"Review",
   }
   ],
   owner:{
@@ -32,7 +32,7 @@ const listingSchema = new Schema({
       required: true
     },
     coordinates: {
-      type: [Number],
+      type:[Number],
       required: true
     }
   }
