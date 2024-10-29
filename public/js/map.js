@@ -1,16 +1,18 @@
 
 	mapboxgl.accessToken = mapToken;
+   
     
     const map = new mapboxgl.Map({
         container: 'map',
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
         style: 'mapbox://styles/mapbox/streets-v12',
-        center: [75.857434, 25.173758],
+        center: JSON.parse(coords),
         zoom: 9,
     });
 
-    console.log(coords);
 
-    const marker = new mapboxgl.Marker()
-    .setLngLat(coords) //listing.geometry.coordinates
+    const marker = new mapboxgl.Marker({color :"red"})
+    .setLngLat(JSON.parse(coords)) //listing.geometry.coordinates
+    .setPopup(new mapboxgl.Popup({offset: 25})
+    .setHTML(`<p>Exact location will be provided after booking</p>`))
     .addTo(map);
