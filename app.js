@@ -61,9 +61,9 @@ const sessionOptions ={
     httpOnly : true
   },
 }
-app.get("/",(req,res)=>{
-  res.send("i m root");
-})
+// app.get("/",(req,res)=>{
+//   res.send("i m root");
+// })
 
 
 app.use(session(sessionOptions));
